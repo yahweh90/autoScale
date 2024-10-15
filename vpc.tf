@@ -1,5 +1,5 @@
 //1. creat the vpc
-resource "aws_vpc" "custome_vpc" {
+resource "aws_vpc" "custom_vpc" {
   cidr_block           = "10.230.0.0/16"
   enable_dns_support   = true
   enable_dns_hostnames = true
@@ -17,29 +17,29 @@ variable "vpc_availability_zone" {
 }
 
 resource "aws_subnet" "public_subnet" {
-  vpc_id            = aws_vpc.custome_vpc.id
+  vpc_id            = aws_vpc.custom_vpc.id
   count             = length(var.vpc_availability_zone)
-  cidr_block        = cidrsubnet(aws_vpc.custome_vpc.cidr_block, 8, count.index + 1)
+  cidr_block        = cidrsubnet(aws_vpc.custom_vpc.cidr_block, 8, count.index + 1)
   availability_zone = element(var.vpc_availability_zone, count.index)
   tags = {
-    Name = "Custome Public Subnet${count.index + 1}",
+    Name = "Custom Public Subnet${count.index + 1}",
   }
 }
 
 resource "aws_subnet" "private_subnet" {
-  vpc_id            = aws_vpc.custome_vpc.id
+  vpc_id            = aws_vpc.custom_vpc.id
   count             = length(var.vpc_availability_zone)
-  cidr_block        = cidrsubnet(aws_vpc.custome_vpc.cidr_block, 8, count.index + 11)
+  cidr_block        = cidrsubnet(aws_vpc.custom_vpc.cidr_block, 8, count.index + 11)
   availability_zone = element(var.vpc_availability_zone, count.index)
   tags = {
-    Name = "Custome Private Subnet${count.index + 1}",
+    Name = "Custom Private Subnet${count.index + 1}",
   }
 }
 
 //3. Create internet gateway and attach it to the vpc
 
 resource "aws_internet_gateway" "internet_gateway" {
-  vpc_id = aws_vpc.custome_vpc.id
+  vpc_id = aws_vpc.custom_vpc.id
   tags = {
     Name = "Custom Internet Gateway",
   }
@@ -47,7 +47,7 @@ resource "aws_internet_gateway" "internet_gateway" {
 
 //4. RT for the public subnet
 resource "aws_route_table" "custom_route_table_public_subnet" {
-  vpc_id = aws_vpc.custome_vpc.id
+  vpc_id = aws_vpc.custom_vpc.id
 
   route {
     cidr_block = "0.0.0.0/0"
@@ -86,7 +86,7 @@ resource "aws_nat_gateway" "custom_nat_gateway" {
 
 //8. RT for private Subnet
 resource "aws_route_table" "custom_route_table_private_subnet" {
-  vpc_id = aws_vpc.custome_vpc.id
+  vpc_id = aws_vpc.custom_vpc.id
 
   route {
     cidr_block = "0.0.0.0/0"
