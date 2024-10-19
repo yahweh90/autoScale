@@ -1,3 +1,4 @@
+//1. create the ec2 instance
 resource "aws_instance" "example_instance" {
   ami                         = "ami-06b21ccaeff8cd686" # Specify the base AMI ID
   instance_type               = "t2.micro"     # Specify the instance type
@@ -11,13 +12,14 @@ resource "aws_instance" "example_instance" {
   }
 
 }
-
+//2. Create the AMI from the ec2 instance
 resource "aws_ami_from_instance" "example_ami" {
   name               = "custom-ami"
   source_instance_id = aws_instance.example_instance.id
 
-
 }
+
+//3. Wait for the AMI then Terminate the ec2 instance
 data "aws_instance" "example_running" {
     filter {
         name = "instance-state-name"
