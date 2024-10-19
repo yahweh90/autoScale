@@ -16,4 +16,29 @@ resource "aws_ami_from_instance" "example_ami" {
   name               = "custom-ami"
   source_instance_id = aws_instance.example_instance.id
 
+
+}
+data "aws_instance" "example_running" {
+    filter {
+        name = "instance-state-name"
+        values = ["running"]
+    }
+
+    instance_id = aws_instance.example_instance.id
+
+    depends_on = [aws_ami_from_instance.example_ami]
+}
+
+output "instance_id" {
+    value = data.aws_instance.example_running.id
+}
+
+resource "null_resource" "delete_instances" {
+    triggers = {
+        instance_id = "${aws_instance.example_instance.id}"
+    }
+    depends_on = [aws_ami_from_instance.example_ami]
+    provisioner "local-exec" {
+        command = "aws ec2 terminate-instances --instance-ids ${aws_instance.example_instance.id}"
+    }
 }
