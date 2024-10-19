@@ -32,12 +32,14 @@ resource "aws_security_group" "ec2_sg" {
   vpc_id = aws_vpc.custom_vpc.id
 
   ingress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    security_groups = [ aws_security_group.alb_sg.id]
+    from_port       = 0
+    to_port         = 0
+    protocol        = "-1"
+    security_groups = [aws_security_group.alb_sg.id]
 
   }
+
+
   egress {
     from_port   = 0
     to_port     = 0
@@ -62,15 +64,17 @@ resource "aws_lb" "app_lb" {
 
 //4. Create A Target Group
 
-resource "aws_lb_target_group" "alb_ec2-tg" {
-  name        = "custom-web-server-tg"
-  port        = 80
-  protocol    = "HTTP"
-  target_type = "instance"
-  vpc_id      = aws_vpc.custom_vpc.id
+resource "aws_lb_target_group" "alb_ec2_tg" {
+  name     = "custom-web-server-tg"
+  port     = 80
+  protocol = "HTTP"
+  #target_type = "instance"
+  vpc_id = aws_vpc.custom_vpc.id
   tags = {
-    Name = "custom-alb_ec2-tg"
+    Name = "custom-alb_ec2_tg"
+
   }
+
 }
 
 //5. alb listener
@@ -81,17 +85,17 @@ resource "aws_lb_listener" "alb_listener" {
 
   default_action {
     type             = "forward"
-    target_group_arn = aws_lb_target_group.alb_ec2-tg.arn
+    target_group_arn = aws_lb_target_group.alb_ec2_tg.arn
   }
   tags = {
     Name = "custom-alb-listener"
   }
 }
 
-//6. Launh template for ec2 instance
+//6. Launch template for ec2 instance
 resource "aws_launch_template" "ec2_launch_template" {
   name          = "custom-ec2-launch-template"
-  image_id      = "ami-06b21ccaeff8cd686"
+  image_id      = aws_ami_from_instance.example_ami.id
   instance_type = "t2.micro"
 
   network_interfaces {
@@ -116,7 +120,7 @@ resource "aws_autoscaling_group" "ec2_asg" {
   min_size            = 2
   desired_capacity    = 2
   name                = "custom-web-server-asg"
-  target_group_arns   = [aws_lb_target_group.alb_ec2-tg.arn]
+  target_group_arns   = [aws_lb_target_group.alb_ec2_tg.arn]
   vpc_zone_identifier = aws_subnet.private_subnet[*].id
 
   launch_template {
