@@ -8,7 +8,7 @@ pipeline {
     stages {
         stage('Checkout Code') {
             steps {
-                git branch: 'main', url: 'https://github.com/your-repo.git' // Replace with your Git repository URL
+                git branch: 'main', url: 'https://github.com/derrickSh43/autoScale' // Replace with your Git repository URL
             }
         }
         stage('Initialize Terraform') {
