@@ -2,20 +2,18 @@ pipeline {
     agent any
     environment {
         AWS_REGION = 'us-east-1' // Specify your AWS region
-
     }
     stages {
-    stage('Set AWS Credentials') {
-        steps {
-            withCredentials([[
-                $class: 'AmazonWebServicesCredentialsBinding',
-                credentialsId: 'AWS_SECRET_ACCESS_KEY'
-            ]]) {
-                sh 'aws sts get-caller-identity' // Test AWS credentials
+        stage('Set AWS Credentials') {
+            steps {
+                withCredentials([[
+                    $class: 'AmazonWebServicesCredentialsBinding',
+                    credentialsId: 'AWS_SECRET_ACCESS_KEY' // Replace with your Jenkins credential ID
+                ]]) {
+                    sh 'aws sts get-caller-identity' // Test AWS credentials
+                }
             }
         }
-    }
-    stages {
         stage('Checkout Code') {
             steps {
                 git branch: 'main', url: 'https://github.com/derrickSh43/autoScale' // Replace with your Git repository URL
