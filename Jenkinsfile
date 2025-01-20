@@ -2,8 +2,18 @@ pipeline {
     agent any
     environment {
         AWS_REGION = 'us-east-1' // Specify your AWS region
-        TF_VAR_ACCESS_KEY = credentials('AWS_ACCESS_KEY_ID') // Jenkins credential for AWS access key
-        TF_VAR_SECRET_KEY = credentials('AWS_SECRET_ACCESS_KEY') // Jenkins credential for AWS secret key
+
+    }
+    stages {
+    stage('Set AWS Credentials') {
+        steps {
+            withCredentials([[
+                $class: 'AmazonWebServicesCredentialsBinding',
+                credentialsId: 'AWS_SECRET_ACCESS_KEY'
+            ]]) {
+                sh 'aws sts get-caller-identity' // Test AWS credentials
+            }
+        }
     }
     stages {
         stage('Checkout Code') {
