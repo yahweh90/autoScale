@@ -10,10 +10,10 @@ pipeline {
                     $class: 'AmazonWebServicesCredentialsBinding',
                     credentialsId: 'AWS_SECRET_ACCESS_KEY' // Replace with your Jenkins credential ID
                 ]]) {
-                    sh ```
+                    sh '''
                     echo "AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID"
                     aws sts get-caller-identity // Test AWS credentials
-                    ```
+                    '''
                 }
             }
         }
