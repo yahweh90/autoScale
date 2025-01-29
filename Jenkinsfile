@@ -12,7 +12,7 @@ pipeline {
                 ]]) {
                     sh '''
                     echo "AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID"
-                    aws sts get-caller-identity // Test AWS credentials
+                    aws sts get-caller-identity
                     '''
                 }
             }
