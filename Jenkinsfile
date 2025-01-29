@@ -58,7 +58,7 @@ pipeline {
                 }
             }
         }
-    }}
+    }
     post {
         success {
             echo 'Terraform deployment completed successfully!'
