@@ -1,14 +1,14 @@
 pipeline {
     agent any
     environment {
-        AWS_REGION = 'us-east-1' // Specify your AWS region
+        AWS_REGION = 'us-east-1' # Specify your AWS region
     }
     stages {
         stage('Set AWS Credentials') {
             steps {
                 withCredentials([[
                     $class: 'AmazonWebServicesCredentialsBinding',
-                    credentialsId: 'AWS_SECRET_ACCESS_KEY' // Replace with your Jenkins credential ID
+                    credentialsId: 'AWS_SECRET_ACCESS_KEY' # Replace with your Jenkins credential ID
                 ]]) {
                     sh '''
                     echo "AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID"
@@ -19,7 +19,7 @@ pipeline {
         }
         stage('Checkout Code') {
             steps {
-                git branch: 'main', url: 'https://github.com/derrickSh43/autoScale' // Replace with your Git repository URL
+                git branch: 'main', url: 'https://github.com/derrickSh43/autoScale' # Replace with your Git repository URL
             }
         }
         stage('Initialize Terraform') {
