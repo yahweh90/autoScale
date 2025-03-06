@@ -8,7 +8,7 @@ pipeline {
             steps {
                 withCredentials([[
                     $class: 'AmazonWebServicesCredentialsBinding',
-                    credentialsId: 'AWS Credentials' 
+                    credentialsId: 'jenkins' 
                 ]]) {
                     sh '''
                     echo "AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID"
@@ -33,7 +33,7 @@ pipeline {
             steps {
                 withCredentials([[
                     $class: 'AmazonWebServicesCredentialsBinding',
-                    credentialsId: 'AWS Credentials'
+                    credentialsId: 'jenkins'
                 ]]) {
                     sh '''
                     export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
@@ -48,7 +48,7 @@ pipeline {
                 input message: "Approve Terraform Apply?", ok: "Deploy"
                 withCredentials([[
                     $class: 'AmazonWebServicesCredentialsBinding',
-                    credentialsId: 'AWS Credentials'
+                    credentialsId: 'jenkins'
                 ]]) {
                     sh '''
                     export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
@@ -68,22 +68,22 @@ pipeline {
         }
     }
 }
-pipeline{
-    agent any
-    tools {
-        jfrog 'jfrog-cli'
-    }
-    stages {
-        stage ('Testing') {
-            steps {
-                jf '-v' 
-                jf 'c show'
-                jf 'rt ping'
-                sh 'touch test-file'
-                jf 'rt u test-file jfrog-cli/'
-                jf 'rt bp'
-                jf 'rt dl jfrog-cli/test-file'
-            }
-        } 
-    }
-}
+// pipeline{
+//     agent any
+//     tools {
+//         jfrog 'jfrog-cli'
+//     }
+//     stages {
+//         stage ('Testing') {
+//             steps {
+//                 jf '-v' 
+//                 jf 'c show'
+//                 jf 'rt ping'
+//                 sh 'touch test-file'
+//                 jf 'rt u test-file jfrog-cli/'
+//                 jf 'rt bp'
+//                 jf 'rt dl jfrog-cli/test-file'
+//             }
+//         } 
+//     }
+// }
